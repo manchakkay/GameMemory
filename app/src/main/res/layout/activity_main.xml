@@ -12,40 +12,41 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="5"
-            android:textSize="36dp"
+            android:textSize="36sp"
             android:textAlignment="center"
-            android:text="Игра меморина "
+            android:text="@string/Memorina"
             android:textColor="@color/white">
         </TextView>
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="3"
-            android:background="@drawable/igralnye_karty">
+            android:background="@drawable/igralnye_karty"
+            android:contentDescription="@string/cards">
         </ImageView>
         <Button
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="5"
             android:background="@color/black"
-            android:onClick="ButtonStart"
-            android:text="Начать игру">
+            android:onClick="buttonStart"
+            android:text="@string/Start">
         </Button>
         <Button
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="5"
             android:background="@color/black"
-            android:onClick="ButtonSettings"
-            android:text="Настройки">
+            android:onClick="buttonSettings"
+            android:text="@string/settings">
         </Button>
         <Button
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="5"
             android:background="@color/black"
-            android:onClick="ButtonExit"
-            android:text="Выход">
+            android:onClick="buttonExit"
+            android:text="@string/exit">
         </Button>
     </LinearLayout>
 </LinearLayout>

@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">GameMemory</string>
+    <string name="Memorina">Игра меморина</string>
+    <string name="cards">Cards</string>
+    <string name="Start">Начать игру</string>
+    <string name="settings">Настройки</string>
+    <string name="exit">Выход</string>
 </resources>

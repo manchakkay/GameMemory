@@ -2,30 +2,16 @@ package com.example.gamememory;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Rect;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
-import android.os.Bundle;
-import android.text.TextPaint;
-import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Toast;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.DialogFragment;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -34,15 +20,16 @@ import java.util.Collections;
 import java.util.Random;
 
 class Card {
-    Paint paint;
+    final Paint paint;
 
     boolean isOpen = false; // перевёрнута ли карта
-    Bitmap btm_Open, btm_NoOpen;
-    int width, height, x, y;
+    final Bitmap btmOpen, btmNoOpen;
+    final int width, height;
+    int x, y;
 
-    public Card(Bitmap btm_Open,Bitmap btm_NoOpen, int x, int y, int width, int height) {
-        this.btm_Open = btm_Open;
-        this.btm_NoOpen = btm_NoOpen;
+    public Card(Bitmap btmOpen, Bitmap btmNoOpen, int x, int y, int width, int height) {
+        this.btmOpen = btmOpen;
+        this.btmNoOpen = btmNoOpen;
         this.width = width;
         this.height = height;
         this.x = x;
@@ -51,13 +38,9 @@ class Card {
     }
 
     public void draw(Canvas canvas) {
-        @SuppressLint("DrawAllocation") Bitmap bmHalf = null;
-        if (isOpen) {
-            bmHalf = Bitmap.createScaledBitmap(btm_Open, width, height, false);
-        }
-        else {
-            bmHalf = Bitmap.createScaledBitmap(btm_NoOpen, width, height, false);
-        }
+        @SuppressLint("DrawAllocation") Bitmap bmHalf;
+        if (isOpen) bmHalf = Bitmap.createScaledBitmap(btmOpen, width, height, false);
+        else bmHalf = Bitmap.createScaledBitmap(btmNoOpen, width, height, false);
         canvas.drawBitmap(bmHalf, x, y, paint);
     }
 
@@ -70,21 +53,23 @@ class Card {
 }
 
 
+@SuppressLint("ViewConstructor")
 public class GameView extends View {
     // пауза для запоминания карт
     final int PAUSE_LENGTH = 2; // в секундах
     boolean isOnPauseNow = false;
-    Context context;
+    final Context context;
 
-    ArrayList<Card> cards = new ArrayList<>(); // текущие карты на поле
-    ArrayList<Bitmap> store = new ArrayList<>(); // для хранения всех карт
+    final ArrayList<Card> cards = new ArrayList<>(); // текущие карты на поле
+    final ArrayList<Bitmap> store = new ArrayList<>(); // для хранения всех карт
 
-    Bitmap bitmapSource; // обратная сторона карты
-    Paint paint;
+    final Bitmap bitmapSource; // обратная сторона карты
+    final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
-    int n; // размер поля для игры
+    final int n; // размер поля для игры
     int openedCard = 0;// число открытых карт
-    int width, height; // ширина и высота канвы
+    final int width, height; // ширина и высота канвы
+
 
     public GameView(Context context, int size, int width, int height) {
 
@@ -93,7 +78,6 @@ public class GameView extends View {
         this.width = width;
         this.height = height;
         this.n = size;
-        paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         bitmapSource = BitmapFactory.decodeResource(getResources(), R.drawable.image_part_055);
         store.add(BitmapFactory.decodeResource(getResources(), R.drawable.image_part_001));
         store.add(BitmapFactory.decodeResource(getResources(), R.drawable.image_part_002));
@@ -152,8 +136,7 @@ public class GameView extends View {
 
         Random r = new Random();
         int dx = width / n, dy = height / n;
-        int tek = 0;
-        int temp = 0;
+        int tek = 0, temp = 0;
         for (int i = 0; i < n; i++){
             for (int j = 0; j < n; j++){
                 int k = r.nextInt(store.size());
@@ -172,7 +155,6 @@ public class GameView extends View {
         Collections.shuffle(cards);
         for (int i = 0; i < n; i++){
             for (int j = 0; j < n; j++){
-                int k = r.nextInt(store.size());
                 cards.get(i * n + j).x = dx * i;
                 cards.get(i * n + j).y = dy * j;
             }
@@ -187,6 +169,7 @@ public class GameView extends View {
         }
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         int x = (int) event.getX();
@@ -234,19 +217,21 @@ public class GameView extends View {
                 b2 = cards.get(i);
             }
         }
-        if (equals(b1.btm_Open,b2.btm_Open)){
-            cards.remove(b1);
-            cards.remove(b2);
-        }
+        if (b2 != null && b1 != null)
+            if (equals(b1.btmOpen, b2.btmOpen)) {
+                cards.remove(b1);
+                cards.remove(b2);
+            }
     }
 
+    @SuppressLint("StaticFieldLeak")
     class PauseTask extends AsyncTask<Integer, Void, Void> {
         @Override
         protected Void doInBackground(Integer... integers) {
             Log.d("mytag", "Pause started");
             try {
                 Thread.sleep(integers[0] * 1000); // передаём число секунд ожидания
-            } catch (InterruptedException e) {}
+            } catch (InterruptedException ignored) {}
             Log.d("mytag", "Pause finished");
             return null;
         }
@@ -258,22 +243,14 @@ public class GameView extends View {
         protected void onPostExecute(Void aVoid) {
             checkOpenCardsEqual();
             if (cards.size() == 0){
-                AlertDialog show = new AlertDialog.Builder(context)
+                new AlertDialog.Builder(context)
                         .setTitle("Конец игры ")
                         .setMessage("Если хотите сыграть ещё нажмите: \"сыграть ещё\".\nДля выхода в меню нажмите:\n\"в главное меню\".")
                         .setCancelable(false)
-                        .setPositiveButton("Сыграть ещё", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                newGame();
-                            }
-                        }).setNegativeButton("В главное меню", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                Intent intent = new Intent(context, MainActivity.class);
-                                context.startActivity(intent);
-                            }
-                        }).show();
+                        .setPositiveButton("Сыграть ещё", (dialog, which) -> newGame()).setNegativeButton("В главное меню", (dialog, which) -> {
+                    Intent intent = new Intent(context, MainActivity.class);
+                    context.startActivity(intent);
+                }).show();
             }
             for (Card c: cards) {
                 if (c.isOpen) {
@@ -309,7 +286,7 @@ public class GameView extends View {
         Collections.shuffle(cards);
         for (int i = 0; i < n; i++){
             for (int j = 0; j < n; j++){
-                int k = r.nextInt(store.size());
+                r.nextInt(store.size());
                 cards.get(i * n + j).x = dx * i;
                 cards.get(i * n + j).y = dy * j;
             }

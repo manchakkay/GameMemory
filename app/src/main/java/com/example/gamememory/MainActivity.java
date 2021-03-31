@@ -1,21 +1,16 @@
 package com.example.gamememory;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.FragmentManager;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.DialogFragment;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -28,19 +23,19 @@ public class MainActivity extends AppCompatActivity {
         selectvalue = 1;
     }
 
-    public void ButtonExit(View view)
+    public void buttonExit()
     {
         System.exit(0);
     }
 
-    public void ButtonStart(View view)
+    public void buttonStart()
     {
         Intent intent = new Intent(MainActivity.this, GameActivity.class);
         intent.putExtra("size", selectvalue);
         startActivity(intent);
     }
 
-    public void ButtonSettings(View view)
+    public void buttonSettings()
     {
         CustomDialogFragment dialog = new CustomDialogFragment();
         dialog.show(getSupportFragmentManager(), "custom");
@@ -54,25 +49,19 @@ public class MainActivity extends AppCompatActivity {
             int k = 2;
             ArrayList<String> arrayList = new ArrayList<>();
             for (int i = 0; i < n; i++){
-                String s = String.valueOf(k) + 'x' + String.valueOf(k);
+                String s = String.valueOf(k) + 'x' + k;
                 k += 2;
                 arrayList.add(s);
             }
-            String[] array = arrayList.toArray(new String[arrayList.size()]);
+            String[] array = arrayList.toArray(new String[0]);
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             builder.setTitle("Выберите размер игрового поля");
-            builder.setSingleChoiceItems(array, selectvalue, new DialogInterface.OnClickListener() {
-
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    selectvalue = which;
-                    Log.i("test", String.valueOf(selectvalue));
-                }
+            builder.setSingleChoiceItems(array, selectvalue, (dialog, which) -> {
+                selectvalue = which;
+                Log.i("test", String.valueOf(selectvalue));
             });
-            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int whichButton) {
+            builder.setPositiveButton("OK", (dialog, whichButton) -> {
 
-                }
             });
             return builder.create();
         }

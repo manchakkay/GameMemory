@@ -18,7 +18,7 @@ import java.util.ArrayList;
 public class GameActivity extends AppCompatActivity {
 
     GameView view;
-    AlertDialog.Builder builder;
+    // --Commented out by Inspection (31.03.2021 11:01):AlertDialog.Builder builder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
