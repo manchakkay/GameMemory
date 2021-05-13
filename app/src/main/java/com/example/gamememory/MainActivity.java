@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,19 +24,22 @@ public class MainActivity extends AppCompatActivity {
         selectvalue = 1;
     }
 
-    public void buttonExit()
+    @SuppressWarnings("unused")
+    public void buttonExit(View v)
     {
         System.exit(0);
     }
 
-    public void buttonStart()
+    @SuppressWarnings("unused")
+    public void buttonStart(View v)
     {
         Intent intent = new Intent(MainActivity.this, GameActivity.class);
         intent.putExtra("size", selectvalue);
         startActivity(intent);
     }
 
-    public void buttonSettings()
+    @SuppressWarnings("unused")
+    public void buttonSettings(View v)
     {
         CustomDialogFragment dialog = new CustomDialogFragment();
         dialog.show(getSupportFragmentManager(), "custom");

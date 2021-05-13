@@ -9,7 +9,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.os.AsyncTask;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -63,8 +62,8 @@ public class GameView extends View {
     final ArrayList<Card> cards = new ArrayList<>(); // текущие карты на поле
     final ArrayList<Bitmap> store = new ArrayList<>(); // для хранения всех карт
 
-    final Bitmap bitmapSource; // обратная сторона карты
-    final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+    final Bitmap cardShirt; // обратная сторона карты
+    // --Commented out by Inspection (14.05.2021 2:44):final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
     final int n; // размер поля для игры
     int openedCard = 0;// число открытых карт
@@ -78,87 +77,16 @@ public class GameView extends View {
         this.width = width;
         this.height = height;
         this.n = size;
-        bitmapSource = BitmapFactory.decodeResource(getResources(), R.drawable.image_part_055);
-        store.add(BitmapFactory.decodeResource(getResources(), R.drawable.image_part_001));
-        store.add(BitmapFactory.decodeResource(getResources(), R.drawable.image_part_002));
-        store.add(BitmapFactory.decodeResource(getResources(), R.drawable.image_part_003));
-        store.add(BitmapFactory.decodeResource(getResources(), R.drawable.image_part_004));
-        store.add(BitmapFactory.decodeResource(getResources(), R.drawable.image_part_005));
-        store.add(BitmapFactory.decodeResource(getResources(), R.drawable.image_part_006));
-        store.add(BitmapFactory.decodeResource(getResources(), R.drawable.image_part_007));
-        store.add(BitmapFactory.decodeResource(getResources(), R.drawable.image_part_008));
-        store.add(BitmapFactory.decodeResource(getResources(), R.drawable.image_part_009));
-        store.add(BitmapFactory.decodeResource(getResources(), R.drawable.image_part_010));
-        store.add(BitmapFactory.decodeResource(getResources(), R.drawable.image_part_011));
-        store.add(BitmapFactory.decodeResource(getResources(), R.drawable.image_part_012));
-        store.add(BitmapFactory.decodeResource(getResources(), R.drawable.image_part_013));
-        store.add(BitmapFactory.decodeResource(getResources(), R.drawable.image_part_014));
-        store.add(BitmapFactory.decodeResource(getResources(), R.drawable.image_part_015));
-        store.add(BitmapFactory.decodeResource(getResources(), R.drawable.image_part_016));
-        store.add(BitmapFactory.decodeResource(getResources(), R.drawable.image_part_017));
-        store.add(BitmapFactory.decodeResource(getResources(), R.drawable.image_part_018));
-        store.add(BitmapFactory.decodeResource(getResources(), R.drawable.image_part_019));
-        store.add(BitmapFactory.decodeResource(getResources(), R.drawable.image_part_020));
-        store.add(BitmapFactory.decodeResource(getResources(), R.drawable.image_part_021));
-        store.add(BitmapFactory.decodeResource(getResources(), R.drawable.image_part_022));
-        store.add(BitmapFactory.decodeResource(getResources(), R.drawable.image_part_023));
-        store.add(BitmapFactory.decodeResource(getResources(), R.drawable.image_part_024));
-        store.add(BitmapFactory.decodeResource(getResources(), R.drawable.image_part_025));
-        store.add(BitmapFactory.decodeResource(getResources(), R.drawable.image_part_026));
-        store.add(BitmapFactory.decodeResource(getResources(), R.drawable.image_part_027));
-        store.add(BitmapFactory.decodeResource(getResources(), R.drawable.image_part_028));
-        store.add(BitmapFactory.decodeResource(getResources(), R.drawable.image_part_029));
-        store.add(BitmapFactory.decodeResource(getResources(), R.drawable.image_part_030));
-        store.add(BitmapFactory.decodeResource(getResources(), R.drawable.image_part_031));
-        store.add(BitmapFactory.decodeResource(getResources(), R.drawable.image_part_032));
-        store.add(BitmapFactory.decodeResource(getResources(), R.drawable.image_part_033));
-        store.add(BitmapFactory.decodeResource(getResources(), R.drawable.image_part_034));
-        store.add(BitmapFactory.decodeResource(getResources(), R.drawable.image_part_035));
-        store.add(BitmapFactory.decodeResource(getResources(), R.drawable.image_part_036));
-        store.add(BitmapFactory.decodeResource(getResources(), R.drawable.image_part_037));
-        store.add(BitmapFactory.decodeResource(getResources(), R.drawable.image_part_038));
-        store.add(BitmapFactory.decodeResource(getResources(), R.drawable.image_part_039));
-        store.add(BitmapFactory.decodeResource(getResources(), R.drawable.image_part_040));
-        store.add(BitmapFactory.decodeResource(getResources(), R.drawable.image_part_041));
-        store.add(BitmapFactory.decodeResource(getResources(), R.drawable.image_part_042));
-        store.add(BitmapFactory.decodeResource(getResources(), R.drawable.image_part_043));
-        store.add(BitmapFactory.decodeResource(getResources(), R.drawable.image_part_044));
-        store.add(BitmapFactory.decodeResource(getResources(), R.drawable.image_part_045));
-        store.add(BitmapFactory.decodeResource(getResources(), R.drawable.image_part_046));
-        store.add(BitmapFactory.decodeResource(getResources(), R.drawable.image_part_047));
-        store.add(BitmapFactory.decodeResource(getResources(), R.drawable.image_part_048));
-        store.add(BitmapFactory.decodeResource(getResources(), R.drawable.image_part_049));
-        store.add(BitmapFactory.decodeResource(getResources(), R.drawable.image_part_050));
-        store.add(BitmapFactory.decodeResource(getResources(), R.drawable.image_part_051));
-        store.add(BitmapFactory.decodeResource(getResources(), R.drawable.image_part_052));
-        store.add(BitmapFactory.decodeResource(getResources(), R.drawable.image_part_053));
-        store.add(BitmapFactory.decodeResource(getResources(), R.drawable.image_part_054));
+        cardShirt = BitmapFactory.decodeResource(getResources(), R.drawable.image_part_055);
 
-        Random r = new Random();
-        int dx = width / n, dy = height / n;
-        int tek = 0, temp = 0;
-        for (int i = 0; i < n; i++){
-            for (int j = 0; j < n; j++){
-                int k = r.nextInt(store.size());
-                if (temp == 0){
-                    tek = k;
-                    cards.add(new Card(store.get(k), bitmapSource, 0, 0, dx, dy));
+        for (int i = 1; i <= 54; i++) {
+            String image = String.format("image_part_%03d", i);
 
-                }
-                else {
-                    cards.add(new Card(store.get(tek), bitmapSource, 0, 0, dx, dy));
-                    temp = -1;
-                }
-                temp++;
-            }
+            int resId = context.getResources().getIdentifier(image, "drawable", context.getPackageName());
+            store.add(BitmapFactory.decodeResource(getResources(), resId));
         }
-        Collections.shuffle(cards);
-        for (int i = 0; i < n; i++){
-            for (int j = 0; j < n; j++){
-                cards.get(i * n + j).x = dx * i;
-                cards.get(i * n + j).y = dy * j;
-            }
-        }
+
+        add_cards();
     }
 
     @Override
@@ -172,18 +100,16 @@ public class GameView extends View {
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        int x = (int) event.getX();
-        int y = (int) event.getY();
-        x = x / (width / n);
-        y = y / (height / n);
         int dx = width / n, dy = height / n;
-        x = x * dx;
-        y = y * dy;
+
+        int x = Math.round(event.getX() / dx) * dx;
+        int y = Math.round(event.getY() / dy) * dy;
+
         if (event.getAction() == MotionEvent.ACTION_DOWN && !isOnPauseNow)
         {
             for (Card c: cards){
                 if (openedCard == 0){
-                    if (c.flip(x,y)){
+                    if (c.flip(x, y)){
                         openedCard++;
                         invalidate();
                         return true;
@@ -228,11 +154,11 @@ public class GameView extends View {
     class PauseTask extends AsyncTask<Integer, Void, Void> {
         @Override
         protected Void doInBackground(Integer... integers) {
-            Log.d("mytag", "Pause started");
+//            Log.d("mytag", "Pause started");
             try {
                 Thread.sleep(integers[0] * 1000); // передаём число секунд ожидания
             } catch (InterruptedException ignored) {}
-            Log.d("mytag", "Pause finished");
+//            Log.d("mytag", "Pause finished");
             return null;
         }
 
@@ -240,7 +166,7 @@ public class GameView extends View {
 
 
         @Override
-        protected void onPostExecute(Void aVoid) {
+        protected void onPostExecute(Void v) {
             checkOpenCardsEqual();
             if (cards.size() == 0){
                 new AlertDialog.Builder(context)
@@ -264,25 +190,29 @@ public class GameView extends View {
     }
 
     public void newGame() {
+        add_cards();
+        invalidate();
+    }
+
+    private void add_cards(){
         Random r = new Random();
         int dx = width / n, dy = height / n;
-        int tek = 0;
-        int temp = 0;
+        int tek = 0, temp = 0;
         for (int i = 0; i < n; i++){
             for (int j = 0; j < n; j++){
                 int k = r.nextInt(store.size());
                 if (temp == 0){
                     tek = k;
-                    cards.add(new Card(store.get(k), bitmapSource, 0, 0, dx, dy));
-
+                    cards.add(new Card(store.get(k), cardShirt, 0, 0, dx, dy));
                 }
                 else {
-                    cards.add(new Card(store.get(tek), bitmapSource, 0, 0, dx, dy));
+                    cards.add(new Card(store.get(tek), cardShirt, 0, 0, dx, dy));
                     temp = -1;
                 }
                 temp++;
             }
         }
+
         Collections.shuffle(cards);
         for (int i = 0; i < n; i++){
             for (int j = 0; j < n; j++){
@@ -291,7 +221,6 @@ public class GameView extends View {
                 cards.get(i * n + j).y = dy * j;
             }
         }
-        invalidate();
     }
 
     public boolean equals(Bitmap bitmap1, Bitmap bitmap2) {
